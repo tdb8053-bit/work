@@ -2,13 +2,27 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>偉哥派車系統 · 雲端調度工作站</title>
   
-  <!-- Web App 與標籤圖示配置 -->
-  <meta name="theme-color" content="#1A1A18">
-  <link rel="icon" type="image/png" href="002.png">
-  <link rel="apple-touch-icon" href="002.png">
+  <!-- 手機主畫面 PWA 與桌面捷徑配置 (iOS Safari & Android Chrome) -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="偉哥調度總部">
+  <meta name="application-name" content="偉哥派車系統">
+  <meta name="theme-color" content="#141412">
+  <meta name="msapplication-TileColor" content="#141412">
+
+  <!-- 捷徑圖示配置 (支援 Safari, Chrome, GitHub Pages) -->
+  <link rel="icon" type="image/png" sizes="192x192" href="./002.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./002.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./002.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="./002.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="./002.png">
+
+  <!-- Android Chrome PWA Web App Manifest (內嵌式 Base64/Data URI 確保 100% 讀到 Logo) -->
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%E5%81%89%E5%93%A5%E6%B4%BE%E8%BB%8A%E7%B3%BB%E7%B5%B1%20%C2%B7%20%E9%9B%B2%E7%AB%AF%E8%AA%BF%E5%BA%A6%E7%B8%BD%E9%83%A8%22%2C%22short_name%22%3A%22%E5%81%89%E5%93%A5%E8%AA%BF%E5%BA%A6%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23141412%22%2C%22theme_color%22%3A%22%23141412%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22002.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22002.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
 
   <!-- Tailwind CSS & 精品字體 -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -23,7 +37,7 @@
       --gold-primary: #C5A059;
       --gold-deep: #8C6D37;
       --gold-light: #F4EEDF;
-      --border-gilded: rgba(197, 160, 89, 0.3);
+      --border-gilded: rgba(197, 160, 89, 0.35);
     }
     body {
       background-color: var(--bg-dark);
@@ -62,7 +76,7 @@
 
   <div class="max-w-xl w-full space-y-5 my-auto">
     
-    <!-- 手機螢幕尺寸過窄警告橫幅（僅針對管理後台提醒） -->
+    <!-- 手機螢幕尺寸提醒橫幅（僅針對管理後台提醒） -->
     <div id="mobile-warning-banner" class="hidden gold-border-card device-alert-badge bg-gradient-to-r from-amber-950/40 via-[#262118] to-amber-950/40 border-amber-500/70 p-4 text-xs font-sans-ui rounded-xl space-y-1.5">
       <div class="flex items-center gap-2 text-amber-400 font-bold text-sm">
         <span>⚠️ 裝置螢幕尺寸提醒</span>
@@ -76,10 +90,10 @@
     <!-- 主控台卡片 -->
     <div class="gold-border-card p-6 sm:p-8 space-y-6">
       
-      <!-- 品牌印章 Logo 與標題 -->
+      <!-- 品牌印章 Logo 與標題（已去除突兀白邊、放大印章本體） -->
       <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-5 border-b border-[#C5A059]/20 pb-5 text-center sm:text-left">
-        <div class="w-20 h-20 rounded-2xl overflow-hidden shadow-xl border-2 border-[#C5A059]/60 bg-white flex items-center justify-center shrink-0 p-1">
-          <img src="002.png" alt="偉哥 Logo" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/tdb8053-bit/Trip2026/main/002.png';">
+        <div class="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl border-2 border-[#C5A059] bg-[#181613] flex items-center justify-center shrink-0 relative group">
+          <img src="./002.png" alt="偉哥 Logo" class="w-full h-full object-cover scale-110 group-hover:scale-115 transition duration-300" onerror="this.onerror=null; this.src='002.png';">
         </div>
         <div class="space-y-1">
           <div class="flex items-center justify-center sm:justify-start gap-2">
@@ -152,7 +166,6 @@
   </div>
 
   <script>
-    // 自動檢測螢幕寬度與裝置，適時跳出電腦端操作提醒
     function checkDeviceViewport() {
       const banner = document.getElementById('mobile-warning-banner');
       const isMobileWidth = window.innerWidth < 1024;
