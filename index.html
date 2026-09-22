@@ -14,15 +14,15 @@
   <meta name="theme-color" content="#141412">
   <meta name="msapplication-TileColor" content="#141412">
 
-  <!-- 捷徑圖示配置 (支援 Safari, Chrome, GitHub Pages) -->
-  <link rel="icon" type="image/png" sizes="192x192" href="./002.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="./002.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="./002.png">
-  <link rel="apple-touch-icon" sizes="192x192" href="./002.png">
-  <link rel="apple-touch-icon" sizes="512x512" href="./002.png">
+  <!-- 捷徑圖示配置 (加入版本號 ?v=2.1 強制手機與電腦刷新快取，徹底杜絕舊快取偏右問題) -->
+  <link rel="icon" type="image/png" sizes="192x192" href="./002.png?v=2.1">
+  <link rel="icon" type="image/png" sizes="512x512" href="./002.png?v=2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="./002.png?v=2.1">
+  <link rel="apple-touch-icon" sizes="192x192" href="./002.png?v=2.1">
+  <link rel="apple-touch-icon" sizes="512x512" href="./002.png?v=2.1">
 
   <!-- Android Chrome PWA Web App Manifest -->
-  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%E5%81%89%E5%93%A5%E6%B4%BE%E8%BB%8A%E7%B3%BB%E7%B5%B1%20%C2%B7%20%E9%9B%B2%E7%AB%AF%E8%AA%BF%E5%BA%A6%E7%B8%BD%E9%83%A8%22%2C%22short_name%22%3A%22%E5%81%89%E5%93%A5%E8%AA%BF%E5%BA%A6%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23141412%22%2C%22theme_color%22%3A%22%23141412%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22002.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22002.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%E5%81%89%E5%93%A5%E6%B4%BE%E8%BB%8A%E7%B3%BB%E7%B5%B1%20%C2%B7%20%E9%9B%B2%E7%AB%AF%E8%AA%BF%E5%BA%A6%E7%B8%BD%E9%83%A8%22%2C%22short_name%22%3A%22%E5%81%89%E5%93%A5%E8%AA%BF%E5%BA%A6%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23141412%22%2C%22theme_color%22%3A%22%23141412%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22002.png%3Fv%3D2.1%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22002.png%3Fv%3D2.1%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
 
   <!-- Tailwind CSS & 精品字體 -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -90,7 +90,7 @@
     <!-- 主控台卡片 -->
     <div class="gold-border-card p-6 sm:p-8 space-y-6">
 
-      <!-- 操作手冊下載按鈕（移至頂部、字型放大、醒目設計） -->
+      <!-- 操作手冊下載按鈕（醒目頂部配置） -->
       <a href="偉哥派車系統 · 標準圖文操作手冊.pdf" target="_blank" class="group flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-[#2B2313] via-[#3A2E19] to-[#2B2313] border-2 border-[#C5A059]/70 hover:border-[#F3E2BD] shadow-lg hover:shadow-[#C5A059]/20 transition-all">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-lg bg-[#181613] border border-[#C5A059]/60 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
@@ -114,10 +114,11 @@
         </div>
       </a>
       
-      <!-- 品牌印章 Logo 與標題 -->
+      <!-- 品牌印章 Logo 與標題（幾何正中心對齊，無人工偏移，徹底杜絕手機偏右電腦偏左） -->
       <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-5 border-b border-[#C5A059]/20 pb-5 text-center sm:text-left">
-        <div class="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl border-2 border-[#C5A059] bg-[#181613] flex items-center justify-center shrink-0 relative group">
-          <img id="main-portal-logo" src="./002.png" alt="偉哥 Logo" class="w-full h-full object-cover scale-110 -translate-x-[4px] group-hover:scale-115 transition duration-300" onerror="this.onerror=null; this.src='002.png';">
+        <!-- Logo 外框：標準正方形容器，以 Flex 雙向自動絕對置中 -->
+        <div class="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl border-2 border-[#C5A059] bg-[#181613] flex items-center justify-center shrink-0 relative group p-1.5">
+          <img id="main-portal-logo" src="./002.png?v=2.1" alt="偉哥 Logo" class="max-w-full max-h-full object-contain mx-auto my-auto group-hover:scale-105 transition duration-300 block" onerror="this.onerror=null; this.src='002.png';">
         </div>
         <div class="space-y-1">
           <div class="flex items-center justify-center sm:justify-start gap-2">
@@ -177,81 +178,16 @@
         </p>
       </div>
 
-      <!-- 頁腳資訊與 Logo 置中校正器入口 -->
+      <!-- 頁腳資訊與快取說明 -->
       <div class="pt-3 border-t border-[#C5A059]/20 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-[#8C8476] font-sans-ui">
         <span>偉哥旅遊派遣平台 · 內部作業專屬</span>
-        <button type="button" onclick="openLogoCalibrator()" class="text-amber-400/90 hover:text-amber-300 flex items-center gap-1 font-bold underline cursor-pointer">
-          <span>🎨 捷徑 Logo 置中校正器</span>
+        <button type="button" onclick="forceClearAppCache()" class="text-amber-400/90 hover:text-amber-300 flex items-center gap-1 font-bold underline cursor-pointer">
+          <span>🔄 強制刷新圖檔快取</span>
         </button>
       </div>
 
     </div>
 
-  </div>
-
-  <!-- Logo 原圖置中校正與一鍵下載工具彈窗 -->
-  <div id="logo-calibrator-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="gold-border-card max-w-md w-full p-5 sm:p-6 space-y-4 font-sans-ui border-amber-500/60 text-left">
-      <div class="flex justify-between items-start border-b border-[#C5A059]/20 pb-3">
-        <div>
-          <h3 class="text-base font-black text-amber-400 flex items-center gap-2">
-            <span>🎨 捷徑 Logo 原圖置中校正工具</span>
-          </h3>
-          <p class="text-[11px] text-[#A89F91] mt-0.5">微調後一鍵下載覆蓋 002.png，即可讓手機桌面捷徑與網頁徹底置中！</p>
-        </div>
-        <button type="button" onclick="closeLogoCalibrator()" class="text-gray-400 hover:text-white text-lg font-bold px-2 py-0.5">✕</button>
-      </div>
-
-      <!-- 預覽畫布（附十字置中對齊參考線） -->
-      <div class="flex flex-col items-center justify-center space-y-2">
-        <div class="relative w-44 h-44 rounded-2xl overflow-hidden border-2 border-amber-500/80 bg-[#181613] shadow-2xl flex items-center justify-center">
-          <canvas id="calibrator-canvas" width="512" height="512" class="w-full h-full object-contain"></canvas>
-          <!-- 十字置中參考虛線 -->
-          <div class="absolute inset-0 pointer-events-none border border-cyan-400/25 flex items-center justify-center">
-            <div class="w-full h-[1px] bg-cyan-400/30"></div>
-            <div class="absolute h-full w-[1px] bg-cyan-400/30"></div>
-          </div>
-        </div>
-        <span class="text-[10px] text-cyan-300/80 font-mono">（藍色十字線為正中心基準線）</span>
-      </div>
-
-      <!-- 控制滑桿 -->
-      <div class="space-y-2.5 bg-black/40 p-3.5 rounded-xl border border-amber-900/40 text-xs">
-        <div class="space-y-1">
-          <div class="flex justify-between text-[11px]">
-            <span class="text-amber-200">水平微調 (X 軸)：<span id="label-offset-x" class="text-cyan-400 font-mono font-bold">-16 px</span></span>
-            <span class="text-gray-400">向左移修正偏右</span>
-          </div>
-          <input type="range" id="slider-offset-x" min="-60" max="60" value="-16" class="w-full accent-amber-500 cursor-pointer" oninput="updateCanvasPreview()">
-        </div>
-
-        <div class="space-y-1">
-          <div class="flex justify-between text-[11px]">
-            <span class="text-amber-200">垂直微調 (Y 軸)：<span id="label-offset-y" class="text-cyan-400 font-mono font-bold">0 px</span></span>
-            <span class="text-gray-400">上下置中</span>
-          </div>
-          <input type="range" id="slider-offset-y" min="-60" max="60" value="0" class="w-full accent-amber-500 cursor-pointer" oninput="updateCanvasPreview()">
-        </div>
-
-        <div class="space-y-1">
-          <div class="flex justify-between text-[11px]">
-            <span class="text-amber-200">圖案縮放比例：<span id="label-scale" class="text-cyan-400 font-mono font-bold">100%</span></span>
-            <span class="text-gray-400">適度填滿邊框</span>
-          </div>
-          <input type="range" id="slider-scale" min="80" max="130" value="100" class="w-full accent-amber-500 cursor-pointer" oninput="updateCanvasPreview()">
-        </div>
-      </div>
-
-      <!-- 下載與操作按鈕 -->
-      <div class="space-y-2 pt-1">
-        <button type="button" onclick="downloadCalibratedLogo()" class="w-full py-2.5 px-4 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black font-black text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
-          <span>📥 下載校正後的置中 002.png</span>
-        </button>
-        <p class="text-[10px] text-gray-400 text-center leading-relaxed">
-          下載後，請直接將此檔案覆蓋上傳至 GitHub 儲存庫取代原本的 <b>002.png</b> 即可！
-        </p>
-      </div>
-    </div>
   </div>
 
   <script>
@@ -265,61 +201,14 @@
       }
     }
 
-    // Logo 校正器邏輯
-    let loadedLogoImg = null;
-
-    function openLogoCalibrator() {
-      const modal = document.getElementById('logo-calibrator-modal');
-      if (modal) modal.classList.remove('hidden');
-
-      if (!loadedLogoImg) {
-        loadedLogoImg = new Image();
-        loadedLogoImg.crossOrigin = 'anonymous';
-        loadedLogoImg.src = './002.png';
-        loadedLogoImg.onload = () => updateCanvasPreview();
-      } else {
-        updateCanvasPreview();
+    // 強制更新圖片快取，確保手機與電腦百分之百同步
+    function forceClearAppCache() {
+      const timestamp = Date.now();
+      const logo = document.getElementById('main-portal-logo');
+      if (logo) {
+        logo.src = './002.png?t=' + timestamp;
       }
-    }
-
-    function closeLogoCalibrator() {
-      const modal = document.getElementById('logo-calibrator-modal');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function updateCanvasPreview() {
-      const canvas = document.getElementById('calibrator-canvas');
-      if (!canvas || !loadedLogoImg) return;
-      const ctx = canvas.getContext('2d');
-
-      const offsetX = parseInt(document.getElementById('slider-offset-x').value, 10);
-      const offsetY = parseInt(document.getElementById('slider-offset-y').value, 10);
-      const scale = parseInt(document.getElementById('slider-scale').value, 10) / 100;
-
-      document.getElementById('label-offset-x').innerText = (offsetX > 0 ? '+' : '') + offsetX + ' px';
-      document.getElementById('label-offset-y').innerText = (offsetY > 0 ? '+' : '') + offsetY + ' px';
-      document.getElementById('label-scale').innerText = Math.round(scale * 100) + '%';
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      const drawWidth = canvas.width * scale;
-      const drawHeight = canvas.height * scale;
-      const drawX = (canvas.width - drawWidth) / 2 + offsetX;
-      const drawY = (canvas.height - drawHeight) / 2 + offsetY;
-
-      ctx.drawImage(loadedLogoImg, drawX, drawY, drawWidth, drawHeight);
-    }
-
-    function downloadCalibratedLogo() {
-      const canvas = document.getElementById('calibrator-canvas');
-      if (!canvas) return;
-
-      const link = document.createElement('a');
-      link.download = '002.png';
-      link.href = canvas.toDataURL('image/png');
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      alert('已強制為您更新最新 Logo 圖檔快取！');
     }
 
     window.addEventListener('DOMContentLoaded', checkDeviceViewport);
