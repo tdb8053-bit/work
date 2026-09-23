@@ -727,9 +727,12 @@
         </div>
 
         <article class="card" style="border: 1.5px solid var(--gold-michelin); background: #FAF8F5;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
             <h3 style="margin:0; color:var(--ink-black); font-size:1.05rem;">📝 標準行程文字輸入區</h3>
-            <button class="button danger small" type="button" onclick="window.clearWorkspaceInput()">🧹 清空輸入區與案件編號</button>
+            <div style="display:flex; gap:6px;">
+              <button class="button gold small" type="button" onclick="window.autoSumCarFares()">⚡ 自動加總車資</button>
+              <button class="button danger small" type="button" onclick="window.clearWorkspaceInput()">🧹 清空輸入區與案件編號</button>
+            </div>
           </div>
 
           <textarea id="standard-text-workspace" class="text-workspace" oninput="window.renderIndependentPreorderUI()">包車開始日期：2026/10/15
@@ -776,6 +779,25 @@ Day 3
 起飛時間：18:30
 航班編號：BR197
 出發航廈：T2</textarea>
+
+          <!-- 即時費用結算總覽卡片 -->
+          <div id="live-financial-summary-card" style="margin-top:14px; padding:16px; border:1.5px solid var(--gold-michelin); border-radius:12px; background:#FFFFFF;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid var(--border-gilded); padding-bottom:8px;">
+              <h4 style="margin:0; font-size:0.92rem; color:var(--gold-deep); font-weight:900;">
+                📊 系統即時費用與總預算結算
+              </h4>
+              <button class="button small gold" type="button" onclick="window.recalculateLiveSummary()">⚡ 重新計算總額</button>
+            </div>
+            <div id="live-summary-content" style="font-size:0.82rem; color:var(--ink-black); display:flex; flex-direction:column; gap:4px;">
+              <div><b>全程包車總車資：</b> <span id="summary-car-fare">NT$ 0</span></div>
+              <div id="summary-tickets-detail"><b>代訂票券明細：</b> 無</div>
+              <div id="summary-hotels-detail"><b>代訂飯店明細：</b> 無</div>
+              <div><b>已收定金：</b> <span id="summary-deposit" style="color:var(--burgundy-seal);">- NT$ 0</span></div>
+              <div style="border-top:1px dashed var(--border-gilded); margin-top:4px; padding-top:4px; font-weight:900; font-size:0.95rem; color:var(--gold-deep);">
+                現場結算總金額（應付總額）： <span id="summary-grand-total">NT$ 0</span>
+              </div>
+            </div>
+          </div>
 
           <div style="margin-top:16px;">
             <h4 style="margin:0 0 10px; font-size:0.95rem; color:var(--gold-deep); font-weight:800;">
@@ -1506,7 +1528,7 @@ Day 1
             if (!window.itemPricingState[key]) {
               window.itemPricingState[key] = {
                 name: `${spot}${isAdult ? '全票' : '孩童票'}`,
-                price: isAdult ? 285 : 230,
+                price: isAdult ? 280 : 230,
                 qty: isAdult ? 2 : 0,
                 checked: isAdult
               };
@@ -1517,7 +1539,7 @@ Day 1
               <div class="preorder-item-card" style="${state.checked ? '' : 'opacity:0.65; background:#FAF8F5;'}">
                 <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.86rem; font-weight:800; color:var(--ink-black);">
                   <input type="checkbox" ${state.checked ? 'checked' : ''} onchange="window.toggleItemCheck('${key}', this.checked)" style="width:16px; height:16px;">
-                  <span>📍 景點：${spot} (${isAdult ? '全票 285元' : '孩童票 230元'})</span>
+                  <span>📍 景點：${spot} (${isAdult ? '全票 280元' : '孩童票 230元'})</span>
                 </label>
                 <div class="preorder-grid">
                   <div><label>項目名稱</label><input type="text" value="${state.name}" oninput="window.updateItemField('${key}', 'name', this.value)"></div>
@@ -1602,8 +1624,10 @@ Day 1
       }
 
       try {
+        sessionStorage.setItem('handoff_case_id', caseId);
         sessionStorage.setItem('wei_handoff_case_id', caseId);
         sessionStorage.setItem('wei-text-workspace-draft-v1', text);
+        localStorage.setItem('handoff_case_id', caseId);
         localStorage.setItem('wei_handoff_case_id', caseId);
         localStorage.setItem('wei-text-workspace-draft-v1', text);
       } catch (_) {}
@@ -2136,7 +2160,78 @@ Day 1
       window.initSystemSettingsForm();
       window.onFinanceFilterChange();
       restoreWorkspaceDirectoryHandle();
+    window.recalculateLiveSummary();
     });
+    window.recalculateLiveSummary = function() {
+      const textarea = document.getElementById('standard-text-workspace');
+      if (!textarea) return;
+      const text = textarea.value;
+
+      // 1. Sum car fares
+      const matches = text.matchAll(/(?:今日車資|車資)[：:]\s*([0-9,]+)/g);
+      let totalCarFare = 0;
+      for (const m of matches) {
+        totalCarFare += parseInt(m[1].replace(/[^\d]/g, ''), 10) || 0;
+      }
+
+      // 2. Sum tickets and hotels from itemPricingState
+      let totalTickets = 0;
+      let ticketItemsText = [];
+      let totalHotels = 0;
+      let hotelItemsText = [];
+
+      Object.values(window.itemPricingState).forEach(state => {
+        if (state.checked && Number(state.price) > 0 && Number(state.qty) > 0) {
+          const sub = (Number(state.price) || 0) * (Number(state.qty) || 1);
+          if (state.name.includes('房費') || state.name.includes('飯店')) {
+            totalHotels += sub;
+            hotelItemsText.push(`${state.name} (${state.price}元 × ${state.qty}) = $${sub}`);
+          } else {
+            totalTickets += sub;
+            ticketItemsText.push(`${state.name} (${state.price}元 × ${state.qty}) = $${sub}`);
+          }
+        }
+      });
+
+      // 3. Deposit
+      const depositInput = document.getElementById('booking-deposit');
+      const deposit = parseInt(depositInput?.value, 10) || 0;
+
+      const grandTotal = totalCarFare + totalTickets + totalHotels - deposit;
+
+      // Update UI
+      document.getElementById('summary-car-fare').textContent = `NT$ ${totalCarFare.toLocaleString()}`;
+      document.getElementById('summary-tickets-detail').innerHTML = `<b>代訂票券明細：</b> ${ticketItemsText.length > 0 ? ticketItemsText.join('、 ') + ` (小計: $${totalTickets.toLocaleString()})` : '無'}`;
+      document.getElementById('summary-hotels-detail').innerHTML = `<b>代訂飯店明細：</b> ${hotelItemsText.length > 0 ? hotelItemsText.join('、 ') + ` (小計: $${totalHotels.toLocaleString()})` : '無'}`;
+      document.getElementById('summary-deposit').textContent = `- NT$ ${deposit.toLocaleString()}`;
+      document.getElementById('summary-grand-total').textContent = `NT$ ${grandTotal.toLocaleString()}`;
+    };
+
+    const oldRender = window.renderIndependentPreorderUI;
+    window.renderIndependentPreorderUI = function() {
+      if (oldRender) oldRender();
+      window.recalculateLiveSummary();
+    };
+
+    window.autoSumCarFares = function() {
+      const textarea = document.getElementById('standard-text-workspace');
+      if (!textarea) return;
+      const text = textarea.value;
+      const matches = text.matchAll(/(?:今日車資|車資)[：:]\s*([0-9,]+)/g);
+      let sum = 0;
+      let count = 0;
+      for (const m of matches) {
+        const val = parseInt(m[1].replace(/[^\d]/g, ''), 10) || 0;
+        sum += val;
+        count++;
+      }
+      if (count === 0) {
+        window.showToast('⚠️ 未在行程文字中檢測到「今日車資：」格式。');
+        return;
+      }
+      window.showToast(`✨ 自動加總完成！共讀取 ${count} 天車資，總車資為 NT$ ${sum.toLocaleString()} 元`);
+    };
+
   </script>
 </body>
 </html>
