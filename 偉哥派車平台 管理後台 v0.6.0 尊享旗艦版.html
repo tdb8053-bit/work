@@ -1607,6 +1607,23 @@ Day 1
       }
 
       let text = textarea ? textarea.value.trim() : '';
+
+      // 自動計算總車資並明確附加到 handoff 文字中，保證生成器 100% 精準讀取
+      const carMatches = text.matchAll(/(?:今日車資|車資)[：:]\s*([0-9,]+)/g);
+      let calculatedTotalFare = 0;
+      for (const cm of carMatches) {
+        calculatedTotalFare += parseInt(cm[1].replace(/[^\d]/g, ''), 10) || 0;
+      }
+      if (calculatedTotalFare > 0 && !/總車資[：:]/.test(text)) {
+        text = `總車資：${calculatedTotalFare}\n${text}`;
+      }
+
+      const depositInput = document.getElementById('booking-deposit');
+      const depositVal = parseInt(depositInput?.value, 10) || 0;
+      if (depositVal >= 0 && !/已收[訂定]金[：:]/.test(text)) {
+        text = `${text}\n已收定金：${depositVal}`;
+      }
+
       let preorderLines = [];
       Object.values(window.itemPricingState).forEach(state => {
         if (state.checked && Number(state.price) > 0 && Number(state.qty) > 0) {
