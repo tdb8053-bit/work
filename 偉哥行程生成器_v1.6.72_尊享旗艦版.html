@@ -1494,8 +1494,14 @@ function removeStructuredReservationRequestsFromNote(note) {
 
 function extractLineAmount(cleanVal) {
   if (!cleanVal) return 0;
-  const match = cleanVal.match(/(?:NT\$?|\$)?\s*([0-9,]+)\s*(?:元)?/i);
-  return match ? parseInt(match[1].replace(/,/g, ''), 10) || 0 : 0;
+  const eqMatch = cleanVal.match(/(?:＝|=)\s*(?:NT\$?|\$)?\s*([0-9,]+)\s*(?:元)?/i);
+  if (eqMatch) return parseInt(eqMatch[1].replace(/,/g, ''), 10) || 0;
+  
+  const matches = cleanVal.match(/([0-9,]+)/g);
+  if (matches && matches.length > 0) {
+    return parseInt(matches[matches.length - 1].replace(/,/g, ''), 10) || 0;
+  }
+  return 0;
 }
 
 function parseCompactBookingDetails(text) {

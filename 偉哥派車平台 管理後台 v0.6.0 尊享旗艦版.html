@@ -1608,7 +1608,6 @@ Day 1
 
       let text = textarea ? textarea.value.trim() : '';
 
-      // 自動計算總車資並明確附加到 handoff 文字中，保證生成器 100% 精準讀取
       const carMatches = text.matchAll(/(?:今日車資|車資)[：:]\s*([0-9,]+)/g);
       let calculatedTotalFare = 0;
       for (const cm of carMatches) {
@@ -1864,7 +1863,7 @@ Day 1
 
           let statusTag = row.status === 'settled' 
             ? '<span style="background:var(--gold-light); color:var(--gold-deep); padding:2px 6px; border-radius:99px; font-size:0.65rem; font-weight:800; border:1px solid #DFCFAE; white-space:nowrap;">已結清 ✓</span>'
-            : '<span style="background:#FFFBEB; color:#92400E; padding:2px 6px; border-radius:99px; font-size:0.65rem; font-weight:800; border:1px solid #FDE68A; white-space:nowrap;">待繳回 ⏳</span>';
+            : '<span style="background:#FFFBEB; color:#92400E; padding:2px 6px; border-radius:999px; font-size:0.65rem; font-weight:800; border:1px solid #FDE68A; white-space:nowrap;">待繳回 ⏳</span>';
 
           return `
             <tr style="border-bottom:1px solid var(--border-gilded); font-size:0.71rem;">
@@ -2177,21 +2176,20 @@ Day 1
       window.initSystemSettingsForm();
       window.onFinanceFilterChange();
       restoreWorkspaceDirectoryHandle();
-    window.recalculateLiveSummary();
+      window.recalculateLiveSummary();
     });
+
     window.recalculateLiveSummary = function() {
       const textarea = document.getElementById('standard-text-workspace');
       if (!textarea) return;
       const text = textarea.value;
 
-      // 1. Sum car fares
       const matches = text.matchAll(/(?:今日車資|車資)[：:]\s*([0-9,]+)/g);
       let totalCarFare = 0;
       for (const m of matches) {
         totalCarFare += parseInt(m[1].replace(/[^\d]/g, ''), 10) || 0;
       }
 
-      // 2. Sum tickets and hotels from itemPricingState
       let totalTickets = 0;
       let ticketItemsText = [];
       let totalHotels = 0;
@@ -2202,21 +2200,18 @@ Day 1
           const sub = (Number(state.price) || 0) * (Number(state.qty) || 1);
           if (state.name.includes('房費') || state.name.includes('飯店')) {
             totalHotels += sub;
-            hotelItemsText.push(`${state.name} (${state.price}元 × ${state.qty}) = $${sub}`);
+            hotelItemsText.push(`${state.name} (${state.price}元 × ${state.qty}) = $${sub.toLocaleString()}`);
           } else {
             totalTickets += sub;
-            ticketItemsText.push(`${state.name} (${state.price}元 × ${state.qty}) = $${sub}`);
+            ticketItemsText.push(`${state.name} (${state.price}元 × ${state.qty}) = $${sub.toLocaleString()}`);
           }
         }
       });
 
-      // 3. Deposit
       const depositInput = document.getElementById('booking-deposit');
       const deposit = parseInt(depositInput?.value, 10) || 0;
-
       const grandTotal = totalCarFare + totalTickets + totalHotels - deposit;
 
-      // Update UI
       document.getElementById('summary-car-fare').textContent = `NT$ ${totalCarFare.toLocaleString()}`;
       document.getElementById('summary-tickets-detail').innerHTML = `<b>代訂票券明細：</b> ${ticketItemsText.length > 0 ? ticketItemsText.join('、 ') + ` (小計: $${totalTickets.toLocaleString()})` : '無'}`;
       document.getElementById('summary-hotels-detail').innerHTML = `<b>代訂飯店明細：</b> ${hotelItemsText.length > 0 ? hotelItemsText.join('、 ') + ` (小計: $${totalHotels.toLocaleString()})` : '無'}`;
@@ -2248,7 +2243,6 @@ Day 1
       }
       window.showToast(`✨ 自動加總完成！共讀取 ${count} 天車資，總車資為 NT$ ${sum.toLocaleString()} 元`);
     };
-
   </script>
 </body>
 </html>
