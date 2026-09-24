@@ -91,8 +91,8 @@
     <!-- 主控台卡片：內距由 p-6 sm:p-8 減半至 p-3.5 sm:p-4.5；垂直間隙 space-y-6 減半至 space-y-3 -->
     <div class="gold-border-card p-3.5 sm:p-4.5 space-y-3">
 
-      <!-- 操作手冊下載按鈕（內距由 p-4 緊湊化為 p-2.5 sm:p-3） -->
-      <a href="偉哥派車系統 · 標準圖文操作手冊.pdf" target="_blank" class="group flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-[#2B2313] via-[#3A2E19] to-[#2B2313] border-2 border-[#C5A059]/70 hover:border-[#F3E2BD] shadow-md hover:shadow-[#C5A059]/20 transition-all">
+      <!-- 操作手冊下載按鈕（已更新為繁體完整檔名與路徑） -->
+      <a href="偉哥派車系統 · 完整標準圖文操作說明書.pdf" target="_blank" class="group flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-[#2B2313] via-[#3A2E19] to-[#2B2313] border-2 border-[#C5A059]/70 hover:border-[#F3E2BD] shadow-md hover:shadow-[#C5A059]/20 transition-all">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-[#181613] border border-[#C5A059]/60 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform">
             📖
@@ -100,7 +100,7 @@
           <div class="space-y-0.2 text-left font-sans-ui">
             <div class="flex items-center gap-1.5">
               <span class="text-xs sm:text-sm font-black text-amber-300 tracking-wide group-hover:text-white transition">
-                點此下載／檢視：標準圖文操作手冊 (PDF)
+                點此下載／檢視：完整標準圖文操作說明書 (PDF)
               </span>
               <span class="text-[9.5px] bg-amber-500/20 text-amber-200 border border-amber-500/40 px-1.5 py-0.2 rounded font-bold">必讀</span>
             </div>
@@ -115,9 +115,8 @@
         </div>
       </a>
       
-      <!-- 品牌印章 Logo 與標題（底部分隔留白由 pb-5 減半為 pb-2.5；gap 由 5 縮減為 3） -->
+      <!-- 品牌印章 Logo 與標題 -->
       <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-3.5 border-b border-[#C5A059]/20 pb-2.5 text-center sm:text-left">
-        <!-- Logo 尺寸由 80px(w-20) 收斂為 64px(w-16)，金色外框更顯端莊精巧 -->
         <div class="w-16 h-16 rounded-xl overflow-hidden shadow-xl border-2 border-[#C5A059] bg-[#181613] flex items-center justify-center shrink-0 relative group p-1">
           <img id="main-portal-logo" src="./002.png?v=2.1" alt="偉哥 Logo" class="max-w-full max-h-full object-contain mx-auto my-auto group-hover:scale-105 transition duration-300 block" onerror="this.onerror=null; this.src='002.png';">
         </div>
@@ -131,7 +130,7 @@
         </div>
       </div>
 
-      <!-- 入口按鈕群：垂直間距由 space-y-3 縮至 space-y-2；各按鈕內距由 p-4 縮至 p-3 -->
+      <!-- 入口按鈕群 -->
       <div class="space-y-2 font-sans-ui">
         
         <!-- 核心入口 1: 管理後台 -->
@@ -170,7 +169,7 @@
 
       </div>
 
-      <!-- 個資隱私嚴格保護說明（內距減半至 p-2.5） -->
+      <!-- 個資隱私嚴格保護說明 -->
       <div class="bg-black/40 border border-emerald-900/60 rounded-xl p-2.5 space-y-1 font-sans-ui text-xs">
         <div class="flex items-center gap-1.5 text-emerald-400 font-bold text-[11px]">
           <span>🔒 客戶個資安全最高防護保障</span>
@@ -180,7 +179,7 @@
         </p>
       </div>
 
-      <!-- 頁腳資訊與快取說明（頂部留白減半至 pt-2） -->
+      <!-- 頁腳資訊與快取說明 -->
       <div class="pt-2 border-t border-[#C5A059]/20 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10.5px] text-[#8C8476] font-sans-ui">
         <span>偉哥旅遊派遣平台 · 內部作業專屬</span>
         <button type="button" onclick="forceClearAppCache()" class="text-amber-400/90 hover:text-amber-300 flex items-center gap-1 font-bold underline cursor-pointer">
@@ -203,7 +202,6 @@
       }
     }
 
-    // 強制更新圖片快取，確保手機與電腦百分之百同步
     function forceClearAppCache() {
       const timestamp = Date.now();
       const logo = document.getElementById('main-portal-logo');

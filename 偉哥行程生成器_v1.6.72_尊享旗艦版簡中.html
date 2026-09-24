@@ -1010,6 +1010,62 @@ let currentLang = 'zh-TW';
 let workspaceDirectoryHandle = null;
 let lastSavedLocalFolderPath = '';
 
+// 精簡高頻繁簡轉換字典（確保點擊簡體時，所有動態生成的景點、手帖內容100%全轉為簡體中文）
+const s2tT2sDict = {
+  '專': '专', '屬': '属', '隨': '随', '導': '导', '禮': '礼', '賓': '宾', '駕': '驾', '執': '执', '勤': '勤',
+  '陳': '陈', '車': '车', '號': '号', '型': '型', '座': '座', '位': '位', '預': '预', '約': '约', '點': '点',
+  '聯': '联', '絡': '络', '話': '话', '需': '需', '求': '求', '備': '备', '註': '注', '條': '条', '款': '款',
+  '樂': '乐', '章': '章', '篇': '篇', '導': '导', '航': '航', '節': '节', '奏': '奏', '啟': '启', '程': '程',
+  '節': '节', '點': '点', '迎': '迎', '送': '送', '機': '机', '達': '达', '飛': '飞', '編': '编', '廈': '厦',
+  '候': '候', '遊': '游', '湖': '湖', '農': '农', '場': '场', '草': '草', '原': '原', '牧': '牧', '區': '区',
+  '雙': '双', '覽': '览', '預': '预', '計': '计', '停': '停', '留': '留', '約': '约', '鐘': '钟', '集': '集',
+  '合': '合', '時': '时', '間': '间', '圖': '图', '覽': '览', '探': '探', '索': '索', '資': '资', '核': '核',
+  '對': '对', '書': '书', '札': '札', '總': '总', '額': '额', '收': '收', '付': '付', '墊': '垫', '計': '计',
+  '定': '定', '金': '金', '現': '现', '結': '结', '算': '算', '應': '应', '清': '清', '即': '即', '可': '可',
+  '雲': '云', '氣': '气', '候': '候', '護': '护', '訪': '访', '邀': '邀', '請': '请', '卡': '卡', '歷': '历',
+  '勝': '胜', '興': '兴', '站': '站', '鐵': '铁', '道': '道', '行': '行', '腳': '脚', '踏': '踏', '創': '创',
+  '始': '始', '店': '店', '館': '馆', '線': '线', '斷': '断', '橋': '桥', '遺': '遗', '址': '址', '魚': '鱼',
+  '藤': '藤', '坪': '坪', '磚': '砖', '藝': '艺', '術': '术', '風': '风', '華': '华', '歲': '岁', '月': '月',
+  '滄': '沧', '桑': '桑', '斑': '斑', '駁': '驳', '古': '古', '樸': '朴', '紅': '红', '偉': '伟', '哥': '哥',
+  '兒': '儿', '童': '童', '椅': '椅', '輪': '轮', '無': '无', '障': '障', '礙': '碍', '協': '协', '葷': '荤',
+  '素': '素', '食': '食', '飲': '饮', '行': '行', '李': '李', '載': '载', '運': '运', '舉': '举', '牌': '牌',
+  '鑑': '鉴', '賞': '赏', '冊': '册', '單': '单', '任': '任', '務': '务', '派': '派', '遣': '遣', '須': '须',
+  '知': '知', '項': '项', '目': '目', '當': '当', '晚': '晚', '宿': '宿', '飯': '饭', '店': '店', '酒': '酒',
+  '奢': '奢', '辦': '办', '理': '理', '入': '入', '續': '续', '安': '安', '置': '置', '整': '整', '備': '备',
+  '積': '积', '滿': '满', '能': '能', '量': '量', '簡': '简', '介': '介', '自': '自', '由': '由', '漫': '漫',
+  '活': '活', '體': '体', '驗': '验', '園': '园', '綿': '绵', '羊': '羊', '秀': '秀', '馬': '马', '術': '术',
+  '例': '例', '假': '假', '日': '日', '場': '场', '含': '含', '脫': '脱', '毛': '毛', '犬': '犬', '趕': '赶',
+  '實': '实', '境': '境', '騎': '骑', '士': '士', '難': '难', '度': '度', '馳': '驰', '特': '特', '技': '技',
+  '互': '互', '動': '动', '碼': '码', '頭': '头', '段': '段', '式': '式', '巡': '巡', '航': '航', '導': '导',
+  '艇': '艇', '沙': '沙', '連': '连', '湛': '湛', '藍': '蓝', '面': '面', '穿': '穿', '梭': '梭', '水': '水',
+  '社': '社', '玄': '玄', '光': '光', '寺': '寺', '伊': '伊', '達': '达', '邵': '邵', '賞': '赏', '雙': '双',
+  '潭': '潭', '色': '色', '絕': '绝', '景': '景', '島': '岛', '層': '层', '疊': '叠', '蒼': '苍', '巒': '峦',
+  '品': '品', '嚐': '尝', '聞': '闻', '名': '名', '菇': '菇', '茶': '茶', '葉': '叶', '蛋': '蛋', '深': '深',
+  '族': '族', '化': '化', '商': '商', '圈': '圈', '老': '老', '街': '街', '推': '推', '薦': '荐', '味': '味',
+  '豬': '猪', '肉': '肉', '腸': '肠', '筒': '筒', '糬': '糬', '返': '返', '回': '回', '準': '准', '寬': '宽',
+  '臺': '台', '灣': '湾', '寶': '宝', '島': '岛', '優': '优', '質': '质', '親': '亲', '切': '切', '極': '极',
+  '致': '致', '誠': '诚', '摯': '挚', '守': '守', '點': '点', '擊': '击', '前': '前', '往': '往', '官': '官',
+  '網': '网', '線': '线', '連': '连', '線': '线', '證': '证', '號': '号', '確': '确', '認': '认', '無': '无'
+};
+
+function toSimpText(str) {
+  if (!str) return '';
+  let out = '';
+  for (let i = 0; i < str.length; i++) {
+    const ch = str[i];
+    out += s2tT2sDict[ch] || ch;
+  }
+  return out;
+}
+
+function localizeDynamicText(str) {
+  if (!str) return '';
+  if (currentLang === 'zh-CN') {
+    return toSimpText(str);
+  }
+  return str;
+}
+
 // 精選台灣私旅景點資料庫
 const travelLibrary = [
   {
@@ -1164,7 +1220,7 @@ const i18nDictionary = {
     brandTitle: '伟哥 · 尊享私旅鉴赏手册',
     heroSuper: 'Curated Expedition in Formosa',
     heroSub: 'Exclusive Private Charter Dossier',
-    tripTitle: (name, days) => name ? `${name}专属：${days}天${days > 1 ? days - 1 : 1}夜 尊荣包车行程表` : '尊荣包车行程表',
+    tripTitle: (name, days) => name ? `${toSimpText(name)}专属：${days}天${days > 1 ? days - 1 : 1}夜 尊荣包车行程表` : '尊荣包车行程表',
     chauffeurTag: 'Certified Chauffeur & Carrier',
     chauffeurTitle: '专属随行司导与礼宾座驾',
     chauffeurStatus: 'KEY GOLD STATUS',
@@ -1522,7 +1578,7 @@ function syncReservationNoteFromDeposit() {
   if (noteRow && noteVal) {
     if (templateData.reservationNote && templateData.reservationNote.trim()) {
       noteRow.hidden = false;
-      noteVal.textContent = templateData.reservationNote;
+      noteVal.textContent = localizeDynamicText(templateData.reservationNote);
     } else {
       noteRow.hidden = true;
     }
@@ -1535,12 +1591,12 @@ function renderReservationRequests() {
   ul.innerHTML = '';
   const reqs = templateData.reservationRequests || [];
   if (reqs.length === 0) {
-    ul.innerHTML = '<li class="text-[#8A8478] list-none">無特殊指定配置</li>';
+    ul.innerHTML = `<li class="text-[#8A8478] list-none">${localizeDynamicText('無特殊指定配置')}</li>`;
     return;
   }
   reqs.forEach(r => {
     const li = document.createElement('li');
-    li.textContent = r;
+    li.textContent = localizeDynamicText(r);
     ul.appendChild(li);
   });
 }
@@ -1552,7 +1608,7 @@ function renderQuickRequestTags() {
   (templateData.reservationRequests || []).forEach((r, idx) => {
     const span = document.createElement('span');
     span.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#F4EEDF] text-[#7A5A1C] border border-[#DFCFAE]';
-    span.innerHTML = `<span>${r}</span><button type="button" onclick="removeQuickRequest(${idx})" class="text-rose-600 hover:text-rose-800 text-[11px] font-black cursor-pointer">✕</button>`;
+    span.innerHTML = `<span>${localizeDynamicText(r)}</span><button type="button" onclick="removeQuickRequest(${idx})" class="text-rose-600 hover:text-rose-800 text-[11px] font-black cursor-pointer">✕</button>`;
     container.appendChild(span);
   });
 }
@@ -1732,13 +1788,15 @@ function renderFullCustomerPage() {
       const guestName = templateData.customerName || '陳先生';
       if (currentLang === 'en') {
         heroTitleEl.innerHTML = `<span class="block">Curated Voyage for ${guestName}</span><span class="block mt-0.5">${days} Days ${nights} Nights Charter</span>`;
+      } else if (currentLang === 'zh-CN') {
+        heroTitleEl.innerHTML = `<span class="block">${toSimpText(guestName)}专属</span><span class="block mt-0.5">${days}天${nights}夜 尊荣包车行程表</span>`;
       } else {
         heroTitleEl.innerHTML = `<span class="block">${guestName}專屬</span><span class="block mt-0.5">${days}天${nights}夜 尊榮包車行程表</span>`;
       }
     }
     const heroMetaEl = document.getElementById('txt-hero-meta');
     if (heroMetaEl) {
-      heroMetaEl.textContent = `${dict.customerPartyLbl} ${templateData.customerParty || '貴賓'} ｜ ${templateData.startDate || '2026.10.15'} ～ ${templateData.endDate || '2026.10.19'}`;
+      heroMetaEl.textContent = `${dict.customerPartyLbl} ${localizeDynamicText(templateData.customerParty) || '貴賓'} ｜ ${templateData.startDate || '2026.10.15'} ～ ${templateData.endDate || '2026.10.19'}`;
     }
 
     const chTag = document.getElementById('txt-chauffeur-tag');
@@ -1760,7 +1818,7 @@ function renderFullCustomerPage() {
       if (driverActive) driverActive.hidden = false;
       if (driverPending) driverPending.hidden = true;
       const vName = document.getElementById('val-driver-name');
-      if (vName) vName.textContent = `${templateData.driver.name} 先生`;
+      if (vName) vName.textContent = `${localizeDynamicText(templateData.driver.name)} 先生`;
       const vPlate = document.getElementById('val-driver-plate');
       if (vPlate) vPlate.textContent = templateData.driver.plate || '-';
       const vVeh = document.getElementById('val-driver-vehicle');
@@ -1785,7 +1843,7 @@ function renderFullCustomerPage() {
     }
 
     const partyEl = document.getElementById('val-customer-party');
-    if (partyEl) partyEl.textContent = templateData.customerParty || '-';
+    if (partyEl) partyEl.textContent = localizeDynamicText(templateData.customerParty) || '-';
     const phoneEl = document.getElementById('val-contact-phone');
     if (phoneEl) phoneEl.textContent = templateData.contactPhone || '-';
 
@@ -1797,7 +1855,7 @@ function renderFullCustomerPage() {
     if (noteRow && noteVal) {
       if (templateData.reservationNote && templateData.reservationNote.trim()) {
         noteRow.hidden = false;
-        noteVal.textContent = templateData.reservationNote;
+        noteVal.textContent = localizeDynamicText(templateData.reservationNote);
       } else {
         noteRow.hidden = true;
         noteVal.textContent = '';
@@ -1853,17 +1911,17 @@ function renderFullCustomerPage() {
       depSection.className = 'flex items-center justify-between flex-wrap gap-2 pt-0.5';
       depSection.innerHTML = `
         <div class="flex items-center gap-1.5 font-sans-ui text-xs text-[#1A1A18]">
-          <span class="text-[#8C6D37] font-bold">⏰ 出發時間：</span>
-          <strong class="font-bold text-[#1A1A18]">${depTimeText}</strong>
+          <span class="text-[#8C6D37] font-bold">⏰ ${localizeDynamicText('出發時間')}：</span>
+          <strong class="font-bold text-[#1A1A18]">${localizeDynamicText(depTimeText)}</strong>
         </div>
-        ${isExceptionTime ? `<span class="departure-exception-tag">例外出發時間</span>` : ''}
+        ${isExceptionTime ? `<span class="departure-exception-tag">${localizeDynamicText('例外出發時間')}</span>` : ''}
       `;
       dayCard.appendChild(depSection);
 
       if (itinerary.origin) {
         const loc = document.createElement('p');
         loc.className = 'text-xs text-[#5A5954] font-sans-ui flex items-center gap-1';
-        loc.innerHTML = `<span>${dict.departureOriginLbl}</span><strong class="text-[#1A1A18]">${itinerary.origin}</strong>`;
+        loc.innerHTML = `<span>${dict.departureOriginLbl}</span><strong class="text-[#1A1A18]">${localizeDynamicText(itinerary.origin)}</strong>`;
         dayCard.appendChild(loc);
       }
 
@@ -1881,9 +1939,9 @@ function renderFullCustomerPage() {
             <div><span class="text-[#8A8478]">${dict.flightNoLbl}</span> <strong class="font-mono">${templateData.pickupInfo.flight}</strong></div>
             <div><span class="text-[#8A8478]">${dict.pickupTerminalLbl}</span> <strong>${templateData.pickupInfo.terminal}</strong></div>
           </div>
-          ${templateData.pickupInfo.meetingPoint ? `<div class="text-[11px] text-[#5A5954] pt-1.5 border-t border-[#EFE9DD]"><span>${dict.meetingPointLbl}</span> <strong>${templateData.pickupInfo.meetingPoint}</strong></div>` : ''}
+          ${templateData.pickupInfo.meetingPoint ? `<div class="text-[11px] text-[#5A5954] pt-1.5 border-t border-[#EFE9DD]"><span>${dict.meetingPointLbl}</span> <strong>${localizeDynamicText(templateData.pickupInfo.meetingPoint)}</strong></div>` : ''}
           <div class="mt-1.5 rounded-lg border border-[#E2D2B0] bg-[#F4EEDF]/60 p-2 text-[10px] text-[#6A4F1D] font-medium leading-relaxed">
-            📶 溫馨提醒：當您降落並連上機場免費 WiFi 時，請傳訊息通知。司機將即時告知您會面的精確地點與接駕時間。
+            ${localizeDynamicText('📶 溫馨提醒：當您降落並連上機場免費 WiFi 時，請傳訊息通知。司機將即時告知您會面的精確地點與接駕時間。')}
           </div>
         `;
         dayCard.appendChild(pickupBox);
@@ -1915,22 +1973,22 @@ function renderFullCustomerPage() {
           const driveBadge = document.createElement('div');
           if (travelInfo.isPending) {
             driveBadge.className = 'travel-time-badge-pending';
-            driveBadge.innerHTML = `<span>⚠️ ${previousSpot} ➔ ${entryName}</span><span>｜車程待確認</span>`;
+            driveBadge.innerHTML = `<span>⚠️ ${localizeDynamicText(previousSpot)} ➔ ${localizeDynamicText(entryName)}</span><span>｜${localizeDynamicText('車程待確認')}</span>`;
           } else {
             driveBadge.className = 'travel-time-badge';
-            driveBadge.innerHTML = `<span>🚘 ${previousSpot} ➔ ${entryName}</span><span>｜${travelInfo.label}</span>`;
+            driveBadge.innerHTML = `<span>🚘 ${localizeDynamicText(previousSpot)} ➔ ${localizeDynamicText(entryName)}</span><span>｜${localizeDynamicText(travelInfo.label)}</span>`;
           }
           timeline.appendChild(driveBadge);
 
           if (travelInfo.mins >= 90) {
             const longReminder = document.createElement('div');
             longReminder.className = 'long-drive-reminder';
-            longReminder.innerHTML = `💡 <b>長途尊榮守護：</b>行車時間約 ${travelInfo.mins} 分鐘，車內備妥礦泉水，司導將主動提供中途休憩停靠。`;
+            longReminder.innerHTML = `💡 <b>${localizeDynamicText('長途尊榮守護：')}</b>${localizeDynamicText(`行車時間約 ${travelInfo.mins} 分鐘，車內備妥礦泉水，司導將主動提供中途休憩停靠。`)}`;
             timeline.appendChild(longReminder);
           }
         }
 
-        // 日月潭遊湖卡片（若為日月潭+清境行程，統一集合時間 12:00）
+        // 日月潭遊湖卡片（繁簡自動切換）
         if (/日月潭[遊游]湖|搭船[遊游]湖|水社碼頭[遊游]湖/.test(entryName)) {
           const card = document.createElement('div');
           card.className = 'p-3.5 rounded-xl bg-[#FAF8F5] border border-[#EFE9DD] space-y-2.5';
@@ -1945,27 +2003,27 @@ function renderFullCustomerPage() {
 
           card.innerHTML = `
             <div class="flex justify-between items-center border-b border-[#EFE9DD] pb-1.5">
-              <h4 class="text-sm font-bold font-serif text-[#1A1A18]">🚢 日月潭遊湖</h4>
-              <span class="text-[10px] font-bold text-[#8C6D37] bg-[#F4EEDF] px-2 py-0.5 rounded-full border border-[#E2D2B0]">三段式巡航導覽</span>
+              <h4 class="text-sm font-bold font-serif text-[#1A1A18]">🚢 ${localizeDynamicText('日月潭遊湖')}</h4>
+              <span class="text-[10px] font-bold text-[#8C6D37] bg-[#F4EEDF] px-2 py-0.5 rounded-full border border-[#E2D2B0]">${localizeDynamicText('三段式巡航導覽')}</span>
             </div>
             <div class="time-schedule-bar">
               <span>${dict.stayPrefix}150 ${dict.stayUnit}</span>
               <span class="text-rose-700 font-bold border-l border-[#E2D2B0] pl-2">${dict.meetingTimePrefix}${meetingTimeStr}</span>
             </div>
-            <p class="text-xs text-[#5A5954] leading-relaxed font-serif">全程搭乘觀光遊艇巡航水沙連湛藍湖面，穿梭水社、玄光寺與伊達邵三大碼頭，欣賞日月潭雙潭水色絕景。</p>
+            <p class="text-xs text-[#5A5954] leading-relaxed font-serif">${localizeDynamicText('全程搭乘觀光遊艇巡航水沙連湛藍湖面，穿梭水社、玄光寺與伊達邵三大碼頭，欣賞日月潭雙潭水色絕景。')}</p>
             
             <div class="space-y-1.5 pt-0.5 font-sans-ui">
               <div class="bg-white/90 border border-[#E2D2B0] rounded-xl p-2.5 text-xs text-[#1A1A18] space-y-0.5 shadow-2xs">
-                <p class="font-bold text-[#8C6D37] flex items-center gap-1"><span>⚓ 第一段：</span><span>水社碼頭 ➔ 玄光寺碼頭</span></p>
-                <p class="text-[11px] text-[#5A5954] leading-relaxed">登上玄光寺遠眺拉魯島與水社湖光山色，品嚐聞名全台的金盆阿嬤香菇茶葉蛋。</p>
+                <p class="font-bold text-[#8C6D37] flex items-center gap-1"><span>⚓ ${localizeDynamicText('第一段：')}</span><span>${localizeDynamicText('水社碼頭 ➔ 玄光寺碼頭')}</span></p>
+                <p class="text-[11px] text-[#5A5954] leading-relaxed">${localizeDynamicText('登上玄光寺遠眺拉魯島與水社湖光山色，品嚐聞名全台的金盆阿嬤香菇茶葉蛋。')}</p>
               </div>
               <div class="bg-white/90 border border-[#E2D2B0] rounded-xl p-2.5 text-xs text-[#1A1A18] space-y-0.5 shadow-2xs">
-                <p class="font-bold text-[#8C6D37] flex items-center gap-1"><span>🍢 第二段：</span><span>玄光寺 ➔ 伊達邵碼頭</span></p>
-                <p class="text-[11px] text-[#5A5954] leading-relaxed">深入邵族文化商圈老街，推薦品味在地美食：山豬肉香腸、竹筒飯、小米麻糬與阿薩姆紅茶。</p>
+                <p class="font-bold text-[#8C6D37] flex items-center gap-1"><span>🍢 ${localizeDynamicText('第二段：')}</span><span>${localizeDynamicText('玄光寺 ➔ 伊達邵碼頭')}</span></p>
+                <p class="text-[11px] text-[#5A5954] leading-relaxed">${localizeDynamicText('深入邵族文化商圈老街，推薦品味在地美食：山豬肉香腸、竹筒飯、小米麻糬與阿薩姆紅茶。')}</p>
               </div>
               <div class="bg-white/90 border border-[#FB7185]/60 rounded-xl p-2.5 text-xs text-[#1A1A18] space-y-0.5 shadow-2xs bg-rose-50/50">
-                <p class="font-bold text-[#BE123C] flex items-center gap-1"><span>⏰ 第三段：</span><span>伊達邵碼頭 ➔ 水社碼頭（返回）</span></p>
-                <p class="text-[11px] text-rose-700 font-medium leading-relaxed">⚠️ 航程結束返回水社碼頭，請依約定時間準時集合（${meetingTimeStr}）。</p>
+                <p class="font-bold text-[#BE123C] flex items-center gap-1"><span>⏰ ${localizeDynamicText('第三段：')}</span><span>${localizeDynamicText('伊達邵碼頭 ➔ 水社碼頭（返回）')}</span></p>
+                <p class="text-[11px] text-rose-700 font-medium leading-relaxed">⚠️ ${localizeDynamicText(`航程結束返回水社碼頭，請依約定時間準時集合（${meetingTimeStr}）。`)}</p>
               </div>
             </div>
 
@@ -1980,7 +2038,7 @@ function renderFullCustomerPage() {
           return;
         }
 
-        // 清境農場卡片（若為日月潭+清境行程，統一集合時間 16:40，演出時段紅字顯示）
+        // 清境農場卡片（繁簡自動切換，演出時段紅字）
         if (entryName.includes('清境農場') || entryName.includes('青青草原') || entryName.includes('觀山牧區')) {
           const card = document.createElement('div');
           card.className = 'p-3.5 rounded-xl bg-[#FAF8F5] border border-[#EFE9DD] space-y-2.5';
@@ -1995,24 +2053,24 @@ function renderFullCustomerPage() {
 
           card.innerHTML = `
             <div class="flex justify-between items-center border-b border-[#EFE9DD] pb-1.5">
-              <h4 class="text-sm font-bold font-serif text-[#1A1A18]">🐑 清境農場（青青草原與觀山牧區）</h4>
-              <span class="text-[10px] font-bold text-[#2F6F4E] bg-[#E3EDE8] px-2 py-0.5 rounded-full border border-[#B9D0C3]">雙景區全覽</span>
+              <h4 class="text-sm font-bold font-serif text-[#1A1A18]">🐑 ${localizeDynamicText('清境農場（青青草原與觀山牧區）')}</h4>
+              <span class="text-[10px] font-bold text-[#2F6F4E] bg-[#E3EDE8] px-2 py-0.5 rounded-full border border-[#B9D0C3]">${localizeDynamicText('雙景區全覽')}</span>
             </div>
             <div class="time-schedule-bar">
               <span>${dict.stayPrefix}160 ${dict.stayUnit}</span>
-              <span class="text-rose-700 font-bold border-l border-[#E2D2B0] pl-2">${dict.meetingTimePrefix}下午 ${meetingTimeStr}</span>
+              <span class="text-rose-700 font-bold border-l border-[#E2D2B0] pl-2">${dict.meetingTimePrefix}${localizeDynamicText('下午')} ${meetingTimeStr}</span>
             </div>
-            <p class="text-xs text-[#5A5954] leading-relaxed font-serif">置身紐西蘭風情的高山綿延牧野，近距離接觸柯莉黛綿羊，遠眺奇萊連峰壯闊雲海與翠綠山巒。</p>
-            <p class="text-[11px] text-[#92400E] font-medium">⚠️ 專員提醒：海拔約 1,750 公尺，紫外線強烈且早晚溫差顯著，建議隨身備妥保暖外套與防曬遮陽配備。</p>
+            <p class="text-xs text-[#5A5954] leading-relaxed font-serif">${localizeDynamicText('置身紐西蘭風情的高山綿延牧野，近距離接觸柯莉黛綿羊，遠眺奇萊連峰壯闊雲海與翠綠山巒。')}</p>
+            <p class="text-[11px] text-[#92400E] font-medium">⚠️ ${localizeDynamicText('專員提醒：海拔約 1,750 公尺，紫外線強烈且早晚溫差顯著，建議隨身備妥保暖外套與防曬遮陽配備。')}</p>
             
             <div class="space-y-1.5 pt-0.5 font-sans-ui">
               <div class="bg-white/90 border border-[#BDD8C7] rounded-xl p-2.5 text-xs text-[#1A1A18] space-y-0.5 shadow-2xs">
-                <p class="font-bold text-[#1B4D35] flex items-center gap-1"><span>🟢 第一園區：</span><span>青青草原（綿羊秀）</span></p>
-                <p class="text-[11px] text-[#5A5954] leading-relaxed">演出時段：<strong class="text-rose-600 font-black" style="color:#e11d48;">例假日 09:30、14:30（每場約 30 分鐘，包含逗趣羊咩咩脫毛秀與牧羊犬趕羊實境秀）</strong>。</p>
+                <p class="font-bold text-[#1B4D35] flex items-center gap-1"><span>🟢 ${localizeDynamicText('第一園區：')}</span><span>${localizeDynamicText('青青草原（綿羊秀）')}</span></p>
+                <p class="text-[11px] text-[#5A5954] leading-relaxed">${localizeDynamicText('演出時段：')}<strong class="text-rose-600 font-black" style="color:#e11d48;">${localizeDynamicText('例假日 09:30、14:30（每場約 30 分鐘，包含逗趣羊咩咩脫毛秀與牧羊犬趕羊實境秀）')}</strong>。</p>
               </div>
               <div class="bg-white/90 border border-[#DFCFAE] rounded-xl p-2.5 text-xs text-[#1A1A18] space-y-0.5 shadow-2xs">
-                <p class="font-bold text-[#8C6D37] flex items-center gap-1"><span>🟡 第二園區：</span><span>觀山牧區（馬術秀）</span></p>
-                <p class="text-[11px] text-[#5A5954] leading-relaxed">演出時段：<strong class="text-rose-600 font-black" style="color:#e11d48;">每日 10:45、15:45（每場約 30 分鐘，由專業蒙古騎士帶來高難度馬術奔馳特技與互動）</strong>。</p>
+                <p class="font-bold text-[#8C6D37] flex items-center gap-1"><span>🟡 ${localizeDynamicText('第二園區：')}</span><span>${localizeDynamicText('觀山牧區（馬術秀）')}</span></p>
+                <p class="text-[11px] text-[#5A5954] leading-relaxed">${localizeDynamicText('演出時段：')}<strong class="text-rose-600 font-black" style="color:#e11d48;">${localizeDynamicText('每日 10:45、15:45（每場約 30 分鐘，由專業蒙古騎士帶來高難度馬術奔馳特技與互動）')}</strong>。</p>
               </div>
             </div>
 
@@ -2036,7 +2094,7 @@ function renderFullCustomerPage() {
         const titleEl = document.createElement('h4');
         titleEl.className = 'text-sm font-bold font-serif text-[#1A1A18]';
         const cardTitle = (entryName && entryName.trim()) ? entryName.trim() : (libMatch ? libMatch.displayName : entryName);
-        titleEl.textContent = `📍 ${cardTitle}`;
+        titleEl.textContent = `📍 ${localizeDynamicText(cardTitle)}`;
         card.appendChild(titleEl);
 
         if (!isDropoffSpot) {
@@ -2051,20 +2109,21 @@ function renderFullCustomerPage() {
 
         const desc = document.createElement('p');
         desc.className = 'text-xs text-[#5A5954] leading-relaxed font-serif';
-        desc.textContent = libMatch?.description || (isDropoffSpot ? '辦妥登機手續、托運行李與安檢出境。' : `精選景點參觀與私旅體驗：${entryName}`);
+        const rawDesc = libMatch?.description || (isDropoffSpot ? '辦妥登機手續、托運行李與安檢出境。' : `精選景點參觀與私旅體驗：${entryName}`);
+        desc.textContent = localizeDynamicText(rawDesc);
         card.appendChild(desc);
 
         if (libMatch?.visitorNotice) {
           const notice = document.createElement('p');
           notice.className = 'text-[11px] text-[#92400E] font-medium mt-1';
-          notice.textContent = `⚠️ 專員提醒：${libMatch.visitorNotice}`;
+          notice.textContent = `⚠️ ${localizeDynamicText('專員提醒：')}${localizeDynamicText(libMatch.visitorNotice)}`;
           card.appendChild(notice);
         }
 
         if (isNightMarket && isLastSpotOfDay) {
           const marketBadge = document.createElement('div');
           marketBadge.className = 'free-activity-card text-[#8C2425] bg-[#FFF5F5] border-[#FECDD3]';
-          marketBadge.textContent = '🚕 司導平穩送抵夜市後今日包車任務圓滿完成，貴賓可盡情體驗在地小吃並自行返回飯店。';
+          marketBadge.textContent = localizeDynamicText('🚕 司導平穩送抵夜市後今日包車任務圓滿完成，貴賓可盡情體驗在地小吃並自行返回飯店。');
           card.appendChild(marketBadge);
         }
 
@@ -2090,10 +2149,10 @@ function renderFullCustomerPage() {
           const stayDriveBadge = document.createElement('div');
           if (stayTravel.isPending) {
             stayDriveBadge.className = 'travel-time-badge-pending';
-            stayDriveBadge.innerHTML = `<span>⚠️ ${previousSpot} ➔ ${itinerary.stay}</span><span>｜車程待確認</span>`;
+            stayDriveBadge.innerHTML = `<span>⚠️ ${localizeDynamicText(previousSpot)} ➔ ${localizeDynamicText(itinerary.stay)}</span><span>｜${localizeDynamicText('車程待確認')}</span>`;
           } else {
             stayDriveBadge.className = 'travel-time-badge';
-            stayDriveBadge.innerHTML = `<span>🚘 ${previousSpot} ➔ ${itinerary.stay}</span><span>｜${stayTravel.label}</span>`;
+            stayDriveBadge.innerHTML = `<span>🚘 ${localizeDynamicText(previousSpot)} ➔ ${localizeDynamicText(itinerary.stay)}</span><span>｜${localizeDynamicText(stayTravel.label)}</span>`;
           }
           timeline.appendChild(stayDriveBadge);
         }
@@ -2104,17 +2163,17 @@ function renderFullCustomerPage() {
         
         hotelCard.innerHTML = `
           <div class="flex justify-between items-center border-b border-[#EFE9DD] pb-1.5">
-            <h4 class="text-sm font-bold font-serif text-[#1A1A18]">🏨 ${itinerary.stay}</h4>
-            <span class="text-[10px] font-bold text-[#8C6D37] bg-[#F4EEDF] px-2 py-0.5 rounded-full border border-[#E2D2B0]">當晚精選奢宿</span>
+            <h4 class="text-sm font-bold font-serif text-[#1A1A18]">🏨 ${localizeDynamicText(itinerary.stay)}</h4>
+            <span class="text-[10px] font-bold text-[#8C6D37] bg-[#F4EEDF] px-2 py-0.5 rounded-full border border-[#E2D2B0]">${localizeDynamicText('當晚精選奢宿')}</span>
           </div>
           <div class="time-schedule-bar bg-white/80">
-            <span class="text-[#1A1A18] font-bold">🏁 預計抵達下榻：${stayTravel.isPending ? '依車程待確認' : formatMinutesToHHMM(arrivalHotelMins)}</span>
-            <span class="text-[#6A665E] ml-1">（辦理入住後自由慢活）</span>
+            <span class="text-[#1A1A18] font-bold">🏁 ${localizeDynamicText('預計抵達下榻：')}${stayTravel.isPending ? localizeDynamicText('依車程待確認') : formatMinutesToHHMM(arrivalHotelMins)}</span>
+            <span class="text-[#6A665E] ml-1">（${localizeDynamicText('辦理入住後自由慢活')}）</span>
           </div>
-          <p class="text-xs text-[#5A5954] leading-relaxed font-serif">辦理入住手續、行李安置與晚間休憩整備，為明日精彩私旅蓄積滿滿能量。</p>
+          <p class="text-xs text-[#5A5954] leading-relaxed font-serif">${localizeDynamicText('辦理入住手續、行李安置與晚間休憩整備，為明日精彩私旅蓄積滿滿能量。')}</p>
           <div class="grid grid-cols-2 gap-2 pt-1">
-            <a href="https://www.google.com/maps/search/?api=1&query=${hotelQuery}" target="_blank" rel="noopener" class="interactive-btn py-1.5 px-2.5 rounded-lg bg-[#1A1A18] text-[#FAF5ED] text-[11px] font-bold text-center">🗺️ 飯店導航</a>
-            <a href="https://www.google.com/search?q=${hotelQuery}" target="_blank" rel="noopener" class="interactive-btn py-1.5 px-2.5 rounded-lg bg-[#F4EEDF] text-[#6A4F1D] border border-[#DFCFAE] text-[11px] font-bold text-center">🔍 飯店簡介</a>
+            <a href="https://www.google.com/maps/search/?api=1&query=${hotelQuery}" target="_blank" rel="noopener" class="interactive-btn py-1.5 px-2.5 rounded-lg bg-[#1A1A18] text-[#FAF5ED] text-[11px] font-bold text-center">🗺️ ${localizeDynamicText('飯店導航')}</a>
+            <a href="https://www.google.com/search?q=${hotelQuery}" target="_blank" rel="noopener" class="interactive-btn py-1.5 px-2.5 rounded-lg bg-[#F4EEDF] text-[#6A4F1D] border border-[#DFCFAE] text-[11px] font-bold text-center">🔍 ${localizeDynamicText('飯店簡介')}</a>
           </div>
         `;
         timeline.appendChild(hotelCard);
@@ -2123,7 +2182,7 @@ function renderFullCustomerPage() {
           itinerary.freeActivities.forEach(fa => {
             const freeEl = document.createElement('div');
             freeEl.className = 'free-activity-card';
-            freeEl.innerHTML = `🌙 <b>晚間自由漫活：</b>${fa}（入住後貴賓自行漫步體驗）`;
+            freeEl.innerHTML = `🌙 <b>${localizeDynamicText('晚間自由漫活：')}</b>${localizeDynamicText(fa)}（${localizeDynamicText('入住後貴賓自行漫步體驗')}）`;
             timeline.appendChild(freeEl);
           });
         }
@@ -2144,9 +2203,9 @@ function renderFullCustomerPage() {
             <div><span class="text-[#8A8478]">${dict.dropoffFlightNoLbl}</span> <strong class="font-mono">${templateData.dropoffInfo.flight}</strong></div>
             <div><span class="text-[#8A8478]">${dict.dropoffTerminalLbl}</span> <strong>${templateData.dropoffInfo.terminal}</strong></div>
           </div>
-          ${templateData.dropoffInfo.location ? `<div class="text-[11px] text-[#5A5954] pt-1 border-t border-[#EFE9DD]"><span>${dict.dropoffLocationLbl}</span> <strong>${templateData.dropoffInfo.location}</strong></div>` : ''}
+          ${templateData.dropoffInfo.location ? `<div class="text-[11px] text-[#5A5954] pt-1 border-t border-[#EFE9DD]"><span>${dict.dropoffLocationLbl}</span> <strong>${localizeDynamicText(templateData.dropoffInfo.location)}</strong></div>` : ''}
           <div class="mt-1.5 rounded-lg border border-[#E2D2B0] bg-[#F4EEDF]/60 p-2 text-[10px] text-[#6A4F1D] font-medium leading-relaxed">
-            🛫 禮賓致意：感謝您選擇偉哥尊享私旅服務，願此趟寶島之行帶給您永恆難忘的美好回憶！
+            ${localizeDynamicText('🛫 禮賓致意：感謝您選擇偉哥尊享私旅服務，願此趟寶島之行帶給您永恆難忘的美好回憶！')}
           </div>
         `;
         dayCard.appendChild(dropoffBox);
@@ -2194,13 +2253,13 @@ function renderFullCustomerPage() {
 
       (templateData.tickets || []).forEach(ticket => {
         const detailText = typeof ticket === 'string' ? ticket : ticket.detail;
-        breakdownEl.innerHTML += `<div class="py-0.5 flex items-start gap-1"><span class="text-[#8C6D37] font-bold shrink-0">• 票券：</span><span>${detailText}</span></div>`;
+        breakdownEl.innerHTML += `<div class="py-0.5 flex items-start gap-1"><span class="text-[#8C6D37] font-bold shrink-0">• ${localizeDynamicText('票券：')}</span><span>${localizeDynamicText(detailText)}</span></div>`;
         hasDetails = true;
       });
 
       (templateData.hotelFees || []).forEach(hotel => {
         const detailText = typeof hotel === 'string' ? hotel : hotel.detail;
-        breakdownEl.innerHTML += `<div class="py-0.5 flex items-start gap-1"><span class="text-[#8C6D37] font-bold shrink-0">• 房費：</span><span>${detailText}</span></div>`;
+        breakdownEl.innerHTML += `<div class="py-0.5 flex items-start gap-1"><span class="text-[#8C6D37] font-bold shrink-0">• ${localizeDynamicText('房費：')}</span><span>${localizeDynamicText(detailText)}</span></div>`;
         hasDetails = true;
       });
 
