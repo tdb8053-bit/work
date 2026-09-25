@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>偉哥派車系統 · 雲端調度工作站</title>
+  <title>傻爸包車旅遊 · 雲端調度總部</title>
   
   <!-- 手機主畫面 PWA 與桌面捷徑配置 (iOS Safari & Android Chrome) -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="偉哥調度總部">
-  <meta name="application-name" content="偉哥派車系統">
+  <meta name="apple-mobile-web-app-title" content="傻爸包車旅遊">
+  <meta name="application-name" content="傻爸包車旅遊">
   <meta name="theme-color" content="#141412">
   <meta name="msapplication-TileColor" content="#141412">
 
@@ -22,7 +22,7 @@
   <link rel="apple-touch-icon" sizes="512x512" href="./002.png?v=2.1">
 
   <!-- Android Chrome PWA Web App Manifest -->
-  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%E5%81%89%E5%93%A5%E6%B4%BE%E8%BB%8A%E7%B3%BB%E7%B5%B1%20%C2%B7%20%E9%9B%B2%E7%AB%AF%E8%AA%BF%E5%BA%A6%E7%B8%BD%E9%83%A8%22%2C%22short_name%22%3A%22%E5%81%89%E5%93%A5%E8%AA%BF%E5%BA%A6%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23141412%22%2C%22theme_color%22%3A%22%23141412%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22002.png%3Fv%3D2.1%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22002.png%3Fv%3D2.1%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%E5%82%BB%E7%88%B8%E5%8C%85%E8%BB%8A%E6%97%85%E9%81%8A%20%C2%B7%20%E9%9B%B2%E7%AB%AF%E8%AA%BF%E5%BA%A6%E7%B8%BD%E9%83%A8%22%2C%22short_name%22%3A%22%E5%82%BB%E7%88%B8%E5%8C%85%E8%BB%8A%E6%97%85%E9%81%8A%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23141412%22%2C%22theme_color%22%3A%22%23141412%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22002.png%3Fv%3D2.1%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22002.png%3Fv%3D2.1%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
 
   <!-- Tailwind CSS & 精品字體 -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -88,11 +88,11 @@
       </p>
     </div>
 
-    <!-- 主控台卡片：內距由 p-6 sm:p-8 減半至 p-3.5 sm:p-4.5；垂直間隙 space-y-6 減半至 space-y-3 -->
+    <!-- 主控台卡片 -->
     <div class="gold-border-card p-3.5 sm:p-4.5 space-y-3">
 
-      <!-- 操作手冊下載按鈕（已更新為繁體完整檔名與路徑） -->
-      <a href="偉哥派車系統 · 完整標準圖文操作說明書.pdf" target="_blank" class="group flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-[#2B2313] via-[#3A2E19] to-[#2B2313] border-2 border-[#C5A059]/70 hover:border-[#F3E2BD] shadow-md hover:shadow-[#C5A059]/20 transition-all">
+      <!-- 操作手冊下載按鈕 -->
+      <a href="傻爸包車旅遊 · 完整標準圖文操作說明書.pdf" target="_blank" class="group flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-[#2B2313] via-[#3A2E19] to-[#2B2313] border-2 border-[#C5A059]/70 hover:border-[#F3E2BD] shadow-md hover:shadow-[#C5A059]/20 transition-all">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-[#181613] border border-[#C5A059]/60 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform">
             📖
@@ -118,15 +118,15 @@
       <!-- 品牌印章 Logo 與標題 -->
       <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-3.5 border-b border-[#C5A059]/20 pb-2.5 text-center sm:text-left">
         <div class="w-16 h-16 rounded-xl overflow-hidden shadow-xl border-2 border-[#C5A059] bg-[#181613] flex items-center justify-center shrink-0 relative group p-1">
-          <img id="main-portal-logo" src="./002.png?v=2.1" alt="偉哥 Logo" class="max-w-full max-h-full object-contain mx-auto my-auto group-hover:scale-105 transition duration-300 block" onerror="this.onerror=null; this.src='002.png';">
+          <img id="main-portal-logo" src="./002.png?v=2.1" alt="傻爸包車旅遊 Logo" class="max-w-full max-h-full object-contain mx-auto my-auto group-hover:scale-105 transition duration-300 block" onerror="this.onerror=null; this.src='002.png';">
         </div>
         <div class="space-y-0.5">
           <div class="flex items-center justify-center sm:justify-start gap-1.5">
             <span class="text-[9.5px] font-cinzel text-[#C5A059] tracking-[0.18em] font-bold uppercase">The Michelin Key Voyage Edition</span>
             <span class="text-[8.5px] font-sans-ui bg-emerald-950 text-emerald-300 border border-emerald-700/60 px-1.5 py-0.2 rounded-full font-bold">內部工作站</span>
           </div>
-          <h1 class="text-lg sm:text-xl font-black text-white tracking-wide">偉哥派車系統 · 雲端調度總部</h1>
-          <p class="text-[11px] text-[#A89F91] font-sans-ui">Wei Travel Concierge · Central Dispatch & Itinerary Studio</p>
+          <h1 class="text-lg sm:text-xl font-black text-white tracking-wide">傻爸包車旅遊 · 雲端調度總部</h1>
+          <p class="text-[11px] text-[#A89F91] font-sans-ui">ShaBa Travel Concierge · Central Dispatch & Itinerary Studio</p>
         </div>
       </div>
 
@@ -134,7 +134,7 @@
       <div class="space-y-2 font-sans-ui">
         
         <!-- 核心入口 1: 管理後台 -->
-        <a href="偉哥派車平台 管理後台 v0.6.0 尊享旗艦版.html" class="group block p-3 rounded-xl bg-gradient-to-r from-[#2A261F] to-[#1E1C17] border border-[#C5A059]/40 hover:border-[#C5A059] transition-all shadow-md">
+        <a href="傻爸包車旅遊 管理後台 v0.6.0 尊享旗艦版.html" class="group block p-3 rounded-xl bg-gradient-to-r from-[#2A261F] to-[#1E1C17] border border-[#C5A059]/40 hover:border-[#C5A059] transition-all shadow-md">
           <div class="flex items-center justify-between">
             <div class="space-y-0.5 pr-2">
               <div class="flex items-center gap-1.5 flex-wrap">
@@ -151,7 +151,7 @@
         </a>
 
         <!-- 核心入口 2: 行程生成器 -->
-        <a href="偉哥行程生成器_v1.6.72_尊享旗艦版.html" class="group block p-3 rounded-xl bg-gradient-to-r from-[#2A261F] to-[#1E1C17] border border-emerald-500/40 hover:border-emerald-400 transition-all shadow-md">
+        <a href="傻爸包車旅遊 行程生成器_v1.6.72_尊享旗艦版.html" class="group block p-3 rounded-xl bg-gradient-to-r from-[#2A261F] to-[#1E1C17] border border-emerald-500/40 hover:border-emerald-400 transition-all shadow-md">
           <div class="flex items-center justify-between">
             <div class="space-y-0.5 pr-2">
               <div class="flex items-center gap-1.5 flex-wrap">
@@ -181,7 +181,7 @@
 
       <!-- 頁腳資訊與快取說明 -->
       <div class="pt-2 border-t border-[#C5A059]/20 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10.5px] text-[#8C8476] font-sans-ui">
-        <span>偉哥旅遊派遣平台 · 內部作業專屬</span>
+        <span>傻爸包車旅遊 · 內部作業專屬</span>
         <button type="button" onclick="forceClearAppCache()" class="text-amber-400/90 hover:text-amber-300 flex items-center gap-1 font-bold underline cursor-pointer">
           <span>🔄 強制刷新圖檔快取</span>
         </button>
